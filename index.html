@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lukáš Starenko — Software Engineer</title>
+    <title>Lukas Starenko — Software Engineer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
     <style>
         :root {
             --bg: #fafaf9;
@@ -176,6 +177,30 @@
         .fade-in { opacity:0; transform:translateY(20px); transition:all 0.6s ease; }
         .fade-in.visible { opacity:1; transform:translateY(0); }
 
+        .demo-desc {
+            font-size:0.95rem; color:var(--text-mid); line-height:1.8;
+            max-width:640px; margin-bottom:1.5rem;
+        }
+        .demo-tech {
+            display:flex; flex-wrap:wrap; gap:1.25rem;
+            padding:1rem 1.25rem;
+            background:var(--accent-light);
+            border-left:3px solid var(--accent);
+            border-radius:0 6px 6px 0;
+            margin-bottom:2rem;
+        }
+        .demo-tech-item {
+            font-family:'IBM Plex Mono',monospace;
+            font-size:0.72rem; color:var(--text-mid);
+        }
+        .demo-tech-item strong { color:var(--text); font-weight:500; }
+        #plotly-chart {
+            width:100%; height:600px;
+            border:1px solid var(--border);
+            border-radius:var(--radius);
+            overflow:hidden;
+        }
+
         @media (max-width:768px) {
             .hero {
                 grid-template-columns:1fr; gap:2.5rem;
@@ -190,6 +215,8 @@
             .focus-grid,.project-grid { grid-template-columns:1fr; }
             .exp-item { grid-template-columns:1fr; gap:0.25rem; }
             .container { padding:0 1.25rem; }
+            #plotly-chart { height:400px; }
+            .demo-tech { flex-direction:column; gap:0.5rem; }
         }
         @media (max-width:480px) {
             .nav-links { display:none; }
@@ -200,12 +227,13 @@
 
 <nav>
     <div class="nav-inner">
-        <div class="nav-name">Lukáš Starenko</div>
+        <div class="nav-name">Lukas Starenko</div>
         <ul class="nav-links">
             <li><a href="#about">About</a></li>
             <li><a href="#focus">Focus</a></li>
             <li><a href="#experience">Experience</a></li>
             <li><a href="#projects">Projects</a></li>
+            <li><a href="#demo">Demo</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
     </div>
@@ -227,7 +255,7 @@
         </div>
         <div class="hero-photo">
             <div class="photo-frame">
-                <img src="photo.jpeg" alt="Lukáš Starenko">
+                <img src="photo.jpeg" alt="Lukas Starenko">
             </div>
         </div>
     </section>
@@ -431,6 +459,25 @@
 <hr class="divider">
 
 <div class="container">
+    <section id="demo" class="fade-in">
+        <div class="section-label">Interactive Demo</div>
+        <h2 class="section-title">Audio Embedding Visualization</h2>
+        <p class="demo-desc">
+            Each point represents a speech sample from one of 7 European languages. Audio files are converted into 768-dimensional embeddings using a ContentVec transformer model, then projected into 3D space with UMAP. The resulting clusters show that the model captures language-specific acoustic patterns — similar languages appear closer together.
+        </p>
+        <div class="demo-tech">
+            <span class="demo-tech-item"><strong>Model:</strong> ContentVec (768-dim)</span>
+            <span class="demo-tech-item"><strong>Reduction:</strong> UMAP &rarr; 3D</span>
+            <span class="demo-tech-item"><strong>Dataset:</strong> Multilingual LibriSpeech</span>
+            <span class="demo-tech-item"><strong>Samples:</strong> 15,086 across 7 languages</span>
+        </div>
+        <div id="plotly-chart"></div>
+    </section>
+</div>
+
+<hr class="divider">
+
+<div class="container">
     <section id="contact" class="contact-section fade-in">
         <div class="section-label">Contact</div>
         <h2 class="section-title">Let's talk</h2>
@@ -445,7 +492,7 @@
     </section>
 </div>
 
-<footer>© 2025 Lukáš Starenko · Prague, Czech Republic</footer>
+<footer>© 2025 Lukas Starenko · Prague, Czech Republic</footer>
 
 <script>
     const fades = document.querySelectorAll('.fade-in');
@@ -453,6 +500,37 @@
         entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     fades.forEach(el => obs.observe(el));
+
+    fetch('portfolio_data.json')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var traces = [];
+            for (var lang in data) {
+                traces.push({
+                    x: data[lang].x,
+                    y: data[lang].y,
+                    z: data[lang].z,
+                    name: lang.charAt(0).toUpperCase() + lang.slice(1),
+                    type: 'scatter3d',
+                    mode: 'markers',
+                    marker: { size: 3, opacity: 0.7 }
+                });
+            }
+            Plotly.newPlot('plotly-chart', traces, {
+                scene: {
+                    xaxis: { title: 'UMAP 1' },
+                    yaxis: { title: 'UMAP 2' },
+                    zaxis: { title: 'UMAP 3' }
+                },
+                legend: { title: { text: 'Language' } },
+                margin: { l: 0, r: 0, t: 0, b: 0 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)'
+            }, {
+                responsive: true,
+                displaylogo: false
+            });
+        });
 </script>
 
 </body>
