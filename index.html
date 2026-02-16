@@ -301,15 +301,16 @@
                 <h3>Audio Processing</h3>
                 <p>Audio ML pipelines — classification, generation. Transformer-based architectures for audio.</p>
                 <div class="tags">
+                    <span class="tag">Mel Spectrograms</span>
+                    <span class="tag">MFCC</span>
                     <span class="tag">HuBERT</span>
                     <span class="tag">ContentVec</span>
                     <span class="tag">torchaudio</span>
                     <span class="tag">librosa</span>
-                    <span class="tag">SpeechBrain</span>
                 </div>
             </div>
             <div class="focus-card">
-                <h3>Backend & Cloud</h3>
+                <h3>Cloud</h3>
                 <p>Production-grade APIs and cloud infrastructure. Strong .NET ecosystem background with Azure services.</p>
                 <div class="tags">
                     <span class="tag">.NET Core</span>
@@ -321,14 +322,14 @@
                 </div>
             </div>
             <div class="focus-card">
-                <h3>MLOps</h3>
-                <p>End-to-end ML lifecycle — experiment tracking, model versioning, automated pipelines, and CI/CD for machine learning.</p>
+                <h3>Programming</h3>
+                <p>Strong foundation in software development — clean code, algorithms, data structures, and object-oriented design.</p>
                 <div class="tags">
-                    <span class="tag">MLflow</span>
-                    <span class="tag">DVC</span>
-                    <span class="tag">Azure ML</span>
-                    <span class="tag">GitHub Actions</span>
-                    <span class="tag">CI/CD</span>
+                    <span class="tag">Python</span>
+                    <span class="tag">C#</span>
+                    <span class="tag">Algorithms</span>
+                    <span class="tag">OOP</span>
+                    <span class="tag">Git</span>
                 </div>
             </div>
         </div>
@@ -461,6 +462,9 @@
     <section id="demo" class="fade-in">
         <div class="section-label">Interactive Demo</div>
         <h2 class="section-title">Audio Embedding Visualization</h2>
+        <p class="demo-desc" style="margin-bottom: 0.5rem;">
+            <strong>Use case:</strong> Visualized audio embeddings help us build balanced datasets by revealing class distributions and identifying underrepresented samples.
+        </p>
         <p class="demo-desc">
             Each point represents a speech sample from one of 7 European languages. Audio files are converted into 768-dimensional embeddings using a ContentVec transformer model, then projected into 3D space with UMAP. The resulting clusters show that the model captures language-specific acoustic patterns — similar languages appear closer together.
         </p>
